@@ -12,6 +12,7 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
@@ -27,9 +28,26 @@ dependencyResolutionManagement {
         }
         google()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
 rootProject.name = "zabanbaz"
 include(":androidApp")
+include(":composeApp")
 include(":shared")
+include(":core:errors")
+include(":core:presentation")
+include(":core:storage")
+include(":core:networking")
+include(":core:di")
+include(":common:session")
+include(":common:languages")
+include(":common:profile")
+include(":common:placement")
+include(":feature:auth")
+include(":feature:startup")
+include(":feature:onboarding")
+include(":feature:placement")
+include(":feature:home")
+include(":feature:profile-ui")
