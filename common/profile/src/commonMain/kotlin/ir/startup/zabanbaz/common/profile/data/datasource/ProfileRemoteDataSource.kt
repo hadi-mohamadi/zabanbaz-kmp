@@ -26,7 +26,7 @@ class ProfileRemoteDataSource(
         val body = buildMap<String, Any> {
             sex?.let { put("sex", it) }
             learningLanguageId?.let { put("learning_language_id", it) }
-            username?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }?.let { put("username", it) }
+            username?.trim()?.takeIf { it.isNotEmpty() }?.let { put("username", it) }
         }
         require(body.isNotEmpty()) { "At least one core profile field is required" }
 

@@ -1,5 +1,7 @@
 package ir.startup.zabanbaz.composeapp.ui.placement
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,65 +47,75 @@ fun PlacementScreen(
         snackbarHostState = snackbarHostState,
     )
 
-    when {
-        state.isLoading -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                CircularProgressIndicator()
-                Text(
-                    text = AppStrings.placementLoading,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
-                Spacer(modifier = Modifier.weight(1f))
-            }
-        }
+    val title = when {
+        state.isOnResultScreen -> AppStrings.placementResultTitle
+        else -> AppStrings.placementTitle
+    }
 
-        state.isOnResultScreen -> {
-            val result = state.result!!
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = AppStrings.placementResultTitle,
-                    style = MaterialTheme.typography.headlineMedium,
-                )
-                Text(
-                    text = result.cefrLevel,
-                    style = MaterialTheme.typography.displaySmall,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                )
-                Text(
-                    text = AppStrings.placementResultScore(
-                        result.scoreCorrect,
-                        result.highestConsecutiveLevel,
-                    ),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    onClick = onComplete,
-                    modifier = Modifier.fillMaxWidth(),
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+        )
+
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Text(AppStrings.placementContinue)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator()
+                        Text(
+                            text = AppStrings.placementLoading,
+                            modifier = Modifier.padding(top = 16.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
-        }
 
-        else -> {
-            val question = state.currentQuestion
-            if (question == null) {
+            state.isOnResultScreen -> {
+                val result = state.result!!
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = result.cefrLevel,
+                        style = MaterialTheme.typography.displaySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        text = AppStrings.placementResultScore(
+                            result.scoreCorrect,
+                            result.highestConsecutiveLevel,
+                        ),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 16.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = onComplete,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(AppStrings.placementContinue)
+                    }
+                }
+            }
+
+            state.currentQuestion == null -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Text(AppStrings.placementEmpty)
                     Spacer(modifier = Modifier.height(16.dp))
@@ -111,87 +123,88 @@ fun PlacementScreen(
                         Text(AppStrings.retry)
                     }
                 }
-                return
             }
 
-            val selectedOptionId = viewModel.selectedOptionIdForCurrentQuestion()
-            val progress = (state.currentQuestionIndex + 1).toFloat() / state.questions.size.coerceAtLeast(1)
+            else -> {
+                val question = state.currentQuestion!!
+                val selectedOptionId = viewModel.selectedOptionIdForCurrentQuestion()
+                val progress = (state.currentQuestionIndex + 1).toFloat() / state.questions.size.coerceAtLeast(1)
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = AppStrings.placementTitle,
-                    style = MaterialTheme.typography.headlineMedium,
-                )
-                Text(
-                    text = AppStrings.placementProgress(
-                        state.currentQuestionIndex + 1,
-                        state.questions.size,
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
-                )
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = question.prompt,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                question.options.forEach { option ->
-                    PlacementOptionRow(
-                        option = option,
-                        selected = selectedOptionId == option.id,
-                        enabled = !state.isSubmitting,
-                        onSelect = { viewModel.onOptionSelected(option.id) },
-                    )
-                }
-
-                state.fieldError?.let { error ->
-                    Spacer(modifier = Modifier.height(12.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 24.dp),
+                ) {
                     Text(
-                        text = error,
-                        color = MaterialTheme.colorScheme.error,
+                        text = AppStrings.placementProgress(
+                            state.currentQuestionIndex + 1,
+                            state.questions.size,
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 16.dp),
                     )
-                }
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    if (state.currentQuestionIndex > 0) {
-                        OutlinedButton(
-                            onClick = viewModel::onPrevious,
+                    Text(
+                        text = question.prompt,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    question.options.forEach { option ->
+                        PlacementOptionRow(
+                            option = option,
+                            selected = selectedOptionId == option.id,
+                            enabled = !state.isSubmitting,
+                            onSelect = { viewModel.onOptionSelected(option.id) },
+                        )
+                    }
+
+                    state.fieldError?.let { error ->
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = error,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        if (state.currentQuestionIndex > 0) {
+                            OutlinedButton(
+                                onClick = viewModel::onPrevious,
+                                enabled = !state.isSubmitting,
+                            ) {
+                                Text(AppStrings.placementBack)
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = viewModel::onNext,
                             enabled = !state.isSubmitting,
                         ) {
-                            Text(AppStrings.placementBack)
-                        }
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = viewModel::onNext,
-                        enabled = !state.isSubmitting,
-                    ) {
-                        if (state.isSubmitting) {
-                            CircularProgressIndicator()
-                        } else {
-                            val label = if (state.isLastQuestion) {
-                                AppStrings.placementSubmit
+                            if (state.isSubmitting) {
+                                CircularProgressIndicator()
                             } else {
-                                AppStrings.placementNext
+                                val label = if (state.isLastQuestion) {
+                                    AppStrings.placementSubmit
+                                } else {
+                                    AppStrings.placementNext
+                                }
+                                Text(label)
                             }
-                            Text(label)
                         }
                     }
                 }

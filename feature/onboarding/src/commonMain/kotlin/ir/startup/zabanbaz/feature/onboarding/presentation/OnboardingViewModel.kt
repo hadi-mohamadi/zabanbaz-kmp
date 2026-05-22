@@ -84,10 +84,10 @@ class OnboardingViewModel(
                 updateState { copy(fieldError = "Please select a language to learn") }
                 return
             }
-            !USERNAME_REGEX.matches(username) -> {
+            !DISPLAY_NAME_REGEX.matches(username) -> {
                 updateState {
                     copy(
-                        fieldError = "Username must be 3–32 characters (letters, numbers, underscore)",
+                        fieldError = "Display name must be 2–32 characters (letters, numbers, spaces, _ -)",
                     )
                 }
                 return
@@ -137,6 +137,6 @@ class OnboardingViewModel(
         }
 
     companion object {
-        private val USERNAME_REGEX = Regex("^[A-Za-z0-9_]{3,32}$")
+        private val DISPLAY_NAME_REGEX = Regex("^[A-Za-z0-9_ \\-]{2,32}$")
     }
 }

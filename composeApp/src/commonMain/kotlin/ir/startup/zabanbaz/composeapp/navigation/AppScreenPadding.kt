@@ -6,8 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ir.startup.zabanbaz.composeapp.theme.zabanbazScreenInsets
 
-/** Applies [Scaffold] content padding for screens that are not edge-to-edge (e.g. splash). */
+/** Safe area + scaffold bottom inset (snackbar) for screens without [SplashBackground]. */
 @Composable
 fun AppScreenPadding(
     padding: PaddingValues,
@@ -16,7 +17,8 @@ fun AppScreenPadding(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding),
+            .zabanbazScreenInsets()
+            .padding(bottom = padding.calculateBottomPadding()),
     ) {
         content()
     }

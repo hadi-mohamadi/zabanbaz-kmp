@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import ir.startup.zabanbaz.composeapp.theme.AppColors
 import ir.startup.zabanbaz.composeapp.theme.AppGradients
 import ir.startup.zabanbaz.composeapp.theme.AppSchemeColors
+import ir.startup.zabanbaz.composeapp.theme.zabanbazScreenInsets
 
 @Composable
 fun SplashBackground(
@@ -57,6 +58,8 @@ fun SplashBackground(
                 .background(secondaryGlow, CircleShape),
         )
 
-        content()
+        Box(modifier = Modifier.fillMaxSize().zabanbazScreenInsets()) {
+            content()
+        }
     }
 }

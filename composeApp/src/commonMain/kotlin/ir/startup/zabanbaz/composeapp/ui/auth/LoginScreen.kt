@@ -81,18 +81,11 @@ fun LoginScreen(
                 .alpha(contentAlpha.value)
                 .verticalScroll(scrollState)
                 .padding(horizontal = 24.dp)
-                .padding(top = 32.dp, bottom = 24.dp),
+                .padding(top = 24.dp, bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ZabanbazLogoMark(size = 64.dp)
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = AppStrings.appName,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
+            ZabanbazLogoMark(size = 56.dp)
+            Spacer(modifier = Modifier.height(24.dp))
 
             AuthFormCard {
                 Text(

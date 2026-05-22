@@ -26,15 +26,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.startup.zabanbaz.composeapp.components.AppLoadingIndicator
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.TimeSource
-import kotlinx.coroutines.delay
 import ir.startup.zabanbaz.composeapp.components.SplashBackground
 import ir.startup.zabanbaz.composeapp.components.ZabanbazLogoMark
 import ir.startup.zabanbaz.composeapp.l10n.AppStrings
 import ir.startup.zabanbaz.composeapp.presentation.OperationErrorEffects
 import ir.startup.zabanbaz.feature.startup.presentation.StartupDestination
 import ir.startup.zabanbaz.feature.startup.presentation.StartupViewModel
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
+import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
 
 private val SplashMinDisplayDuration = 4.seconds
@@ -83,11 +83,14 @@ fun SplashScreen(
     }
 
     SplashBackground(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(contentAlpha.value),
+        ) {
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .alpha(contentAlpha.value)
                     .scale(contentScale.value)
                     .padding(horizontal = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,16 +98,9 @@ fun SplashScreen(
                 ZabanbazLogoMark()
                 Spacer(modifier = Modifier.height(28.dp))
                 Text(
-                    text = AppStrings.appName,
-                    style = MaterialTheme.typography.displayLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
                     text = AppStrings.splashTagline,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -112,8 +108,7 @@ fun SplashScreen(
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 56.dp)
-                    .alpha(contentAlpha.value),
+                    .padding(bottom = 40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {

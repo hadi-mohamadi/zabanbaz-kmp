@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -31,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,7 +53,6 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val contentAlpha = remember { Animatable(0f) }
     val scrollState = rememberScrollState()
-    var menuExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(refreshNonce) {
         viewModel.onProfileRequested()
@@ -93,30 +88,23 @@ fun HomeScreen(
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp)
-                        .padding(top = 24.dp, bottom = 32.dp),
+                        .padding(top = 20.dp, bottom = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     if (profile != null) {
-                        Box {
-                            ProfileAvatar(
-                                profile = profile,
-                                size = 72.dp,
-                                modifier = Modifier.clickable { menuExpanded = true },
-                            )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                        ) {
                             HomeProfileMenu(
-                                expanded = menuExpanded,
-                                onDismiss = { menuExpanded = false },
-                                onProfile = {
-                                    menuExpanded = false
-                                    onNavigateToProfile()
-                                },
-                                onLogout = {
-                                    menuExpanded = false
-                                    viewModel.onLogout(onLoggedOut)
-                                },
+                                profile = profile,
+                                modifier = Modifier.align(Alignment.TopEnd),
+                                onNavigateToProfile = onNavigateToProfile,
+                                onLogout = { viewModel.onLogout(onLoggedOut) },
                             )
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
+
                         Text(
                             text = profile.fullName?.let { AppStrings.homeWelcome(it) }
                                 ?: profile.username?.let { AppStrings.homeWelcome("@$it") }
@@ -170,28 +158,36 @@ fun HomeScreen(
 
 @Composable
 private fun HomeProfileMenu(
-    expanded: Boolean,
-    onDismiss: () -> Unit,
-    onProfile: () -> Unit,
+    profile: UserProfile,
+    onNavigateToProfile: () -> Unit,
     onLogout: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = Modifier
-            .size(72.dp)
-            .clip(CircleShape),
-        contentAlignment = Alignment.TopEnd,
-    ) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        ProfileAvatar(
+            profile = profile,
+            size = 48.dp,
+            modifier = Modifier.clickable { menuExpanded = true },
+        )
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = onDismiss,
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false },
         ) {
             DropdownMenuItem(
                 text = { Text(AppStrings.homeMenuProfile) },
-                onClick = onProfile,
+                onClick = {
+                    menuExpanded = false
+                    onNavigateToProfile()
+                },
             )
             DropdownMenuItem(
                 text = { Text(AppStrings.homeLogout) },
-                onClick = onLogout,
+                onClick = {
+                    menuExpanded = false
+                    onLogout()
+                },
             )
         }
     }

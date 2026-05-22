@@ -3,7 +3,6 @@ package ir.startup.zabanbaz.composeapp.ui.profile
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +34,6 @@ import ir.startup.zabanbaz.composeapp.components.AppSecondaryButton
 import ir.startup.zabanbaz.composeapp.components.AppTextField
 import ir.startup.zabanbaz.composeapp.components.AuthFormCard
 import ir.startup.zabanbaz.composeapp.components.InfoRow
-import ir.startup.zabanbaz.composeapp.components.ProfileAvatar
 import ir.startup.zabanbaz.composeapp.components.SplashBackground
 import ir.startup.zabanbaz.composeapp.l10n.AppStrings
 import ir.startup.zabanbaz.composeapp.presentation.OperationErrorEffects
@@ -78,7 +76,7 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .alpha(contentAlpha.value),
         ) {
-            ProfileTopBar(onBack = onBack, enabled = !state.isSaving)
+            ProfileTopBar(onBack = onBack)
 
             if (state.isLoading) {
                 Box(
@@ -94,18 +92,9 @@ fun ProfileScreen(
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp)
-                        .padding(bottom = 32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .padding(top = 12.dp, bottom = 32.dp),
                 ) {
                     if (profile != null) {
-                        ProfileAvatar(profile = profile, size = 80.dp)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = AppStrings.profileTitle,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = AppStrings.profileSubtitle,
                             style = MaterialTheme.typography.bodyMedium,
@@ -221,22 +210,27 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun ProfileTopBar(
-    onBack: () -> Unit,
-    enabled: Boolean,
-) {
+private fun ProfileTopBar(onBack: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        TextButton(onClick = onBack, enabled = enabled) {
+        TextButton(onClick = onBack) {
             Text(
                 text = AppStrings.profileBack,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
             )
         }
+        Text(
+            text = AppStrings.profileTitle,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 4.dp),
+        )
     }
 }

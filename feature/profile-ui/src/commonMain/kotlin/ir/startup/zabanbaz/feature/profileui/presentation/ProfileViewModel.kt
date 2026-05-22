@@ -44,14 +44,14 @@ class ProfileViewModel(
 
     fun onSave() {
         val profile = currentState.profile ?: return
-        val username = currentState.username.trim().lowercase()
-        val previousUsername = profile.username.orEmpty().lowercase()
+        val username = currentState.username.trim()
+        val previousUsername = profile.username.orEmpty().trim()
         val usernameChanged = username != previousUsername
 
-        if (usernameChanged && !USERNAME_REGEX.matches(currentState.username.trim())) {
+        if (usernameChanged && !DISPLAY_NAME_REGEX.matches(username)) {
             updateState {
                 copy(
-                    fieldError = "Username must be 3–32 characters (letters, numbers, underscore)",
+                    fieldError = "Display name must be 2–32 characters (letters, numbers, spaces, _ -)",
                 )
             }
             return
@@ -117,6 +117,6 @@ class ProfileViewModel(
         }
 
     companion object {
-        private val USERNAME_REGEX = Regex("^[A-Za-z0-9_]{3,32}$")
+        private val DISPLAY_NAME_REGEX = Regex("^[A-Za-z0-9_ \\-]{2,32}$")
     }
 }

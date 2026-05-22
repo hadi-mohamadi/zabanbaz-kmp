@@ -11,10 +11,10 @@ class UpdateCoreProfileUseCase(
     ): UserProfile = repository.patchCoreProfile(
         sex = sex,
         learningLanguageId = learningLanguageId,
-        username = username.trim().lowercase(),
+        username = username.trim(),
     )
 
-    /** Partial core profile update (e.g. username only from profile screen). */
+    /** Partial core profile update (e.g. display name only from profile screen). */
     suspend fun patch(
         sex: String? = null,
         learningLanguageId: Int? = null,
@@ -22,6 +22,6 @@ class UpdateCoreProfileUseCase(
     ): UserProfile = repository.patchCoreProfile(
         sex = sex,
         learningLanguageId = learningLanguageId,
-        username = username?.trim()?.lowercase(),
+        username = username?.trim(),
     )
 }
