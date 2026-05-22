@@ -94,12 +94,16 @@ fun ZabanbazApp() {
                 AppScreenPadding(padding) {
                     PlacementScreen(
                         onComplete = {
-                            if (navController.previousBackStackEntry?.destination?.route == AppRoutes.Home) {
-                                homeRefreshNonce++
-                                navController.popBackStack()
-                            } else {
-                                navController.navigate(AppRoutes.Home) {
-                                    popUpTo(AppRoutes.Placement) { inclusive = true }
+                            val previousRoute = navController.previousBackStackEntry?.destination?.route
+                            when (previousRoute) {
+                                AppRoutes.Home, AppRoutes.Profile -> {
+                                    homeRefreshNonce++
+                                    navController.popBackStack()
+                                }
+                                else -> {
+                                    navController.navigate(AppRoutes.Home) {
+                                        popUpTo(AppRoutes.Placement) { inclusive = true }
+                                    }
                                 }
                             }
                         },
@@ -109,9 +113,8 @@ fun ZabanbazApp() {
             }
             composable(AppRoutes.Home) {
                 HomeScreen(
-                    onRetakePlacement = {
-                        navController.navigate(AppRoutes.Placement)
-                    },
+                    onNavigateToProfile = { navController.navigate(AppRoutes.Profile) },
+                    onRetakePlacement = { navController.navigate(AppRoutes.Placement) },
                     onLoggedOut = {
                         navController.navigate(AppRoutes.Login) {
                             popUpTo(AppRoutes.Home) { inclusive = true }
@@ -122,12 +125,14 @@ fun ZabanbazApp() {
                 )
             }
             composable(AppRoutes.Profile) {
-                AppScreenPadding(padding) {
-                    ProfileScreen(
-                        onBack = { navController.popBackStack() },
-                        snackbarHostState = snackbarHostState,
-                    )
-                }
+                ProfileScreen(
+                    onBack = {
+                        homeRefreshNonce++
+                        navController.popBackStack()
+                    },
+                    onRetakePlacement = { navController.navigate(AppRoutes.Placement) },
+                    snackbarHostState = snackbarHostState,
+                )
             }
         }
     }
