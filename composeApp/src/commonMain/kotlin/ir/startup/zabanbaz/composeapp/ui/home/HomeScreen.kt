@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -80,8 +79,6 @@ fun HomeScreen(
                 .fillMaxSize()
                 .alpha(contentAlpha.value),
         ) {
-            HomeTopBar()
-
             if (state.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -96,11 +93,10 @@ fun HomeScreen(
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                         .padding(horizontal = 24.dp)
-                        .padding(bottom = 32.dp),
+                        .padding(top = 24.dp, bottom = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     if (profile != null) {
-                        Spacer(modifier = Modifier.height(8.dp))
                         Box {
                             ProfileAvatar(
                                 profile = profile,
@@ -170,16 +166,6 @@ fun HomeScreen(
             }
         }
     }
-}
-
-@Composable
-private fun HomeTopBar() {
-    Text(
-        text = AppStrings.appName,
-        style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-    )
 }
 
 @Composable
