@@ -36,8 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.startup.zabanbaz.common.profile.domain.UserProfile
-import ir.startup.zabanbaz.composeapp.components.AppSecondaryButton
-import ir.startup.zabanbaz.composeapp.components.HomeStatCard
+import ir.startup.zabanbaz.composeapp.components.AppPrimaryButton
+import ir.startup.zabanbaz.composeapp.components.InfoRow
 import ir.startup.zabanbaz.composeapp.components.ProfileAvatar
 import ir.startup.zabanbaz.composeapp.components.SplashBackground
 import ir.startup.zabanbaz.composeapp.l10n.AppStrings
@@ -126,35 +126,83 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        HomeStatCard(
-                            label = AppStrings.homeLabelLevel,
-                            value = profile.englishCefrLevel?.let { AppStrings.homeCefrBadge(it) }
-                                ?: AppStrings.homeLevelNotSet,
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        profile.username?.let { username ->
-                            HomeStatCard(
-                                label = AppStrings.homeLabelUsername,
-                                value = username,
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                        }
-                        profile.learningLanguageName?.let { language ->
-                            HomeStatCard(
-                                label = AppStrings.homeLabelLanguage,
-                                value = language,
-                            )
-                        }
+                        HomeLearningSummaryCard(profile = profile)
 
-                        if (profile.canRetakeEnglishPlacement) {
-                            Spacer(modifier = Modifier.height(24.dp))
-                            AppSecondaryButton(
-                                text = AppStrings.homeRetakeExam,
-                                onClick = onRetakePlacement,
-                            )
-                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        HomeFreeDiscussionSection()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeFreeDiscussionSection() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp,
+        shadowElevation = 4.dp,
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = AppStrings.homeFreeDiscussionTitle,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = AppStrings.homeFreeDiscussionSubtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            AppPrimaryButton(
+                text = AppStrings.homeFreeDiscussionRequest,
+                onClick = {},
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeLearningSummaryCard(profile: UserProfile) {
+    val levelValue = profile.englishCefrLevel?.let { AppStrings.homeCefrBadge(it) }
+        ?: AppStrings.homeLevelNotSet
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp,
+        shadowElevation = 4.dp,
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)) {
+            InfoRow(
+                label = AppStrings.homeLabelLevel,
+                value = levelValue,
+            )
+
+            profile.username?.let { username ->
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                InfoRow(
+                    label = AppStrings.homeLabelUsername,
+                    value = username,
+                )
+            }
+
+            profile.learningLanguageName?.let { language ->
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                InfoRow(
+                    label = AppStrings.homeLabelLanguage,
+                    value = language,
+                )
             }
         }
     }
