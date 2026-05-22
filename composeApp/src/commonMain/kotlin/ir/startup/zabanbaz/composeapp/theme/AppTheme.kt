@@ -7,6 +7,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import ir.startup.zabanbaz.composeapp.l10n.AppLocale
 
 private val LightColorScheme = lightColorScheme(
     primary = AppSchemeColors.LightPrimary,
@@ -94,7 +96,10 @@ fun AppTheme(
         info = AppColors.Info,
     )
 
-    CompositionLocalProvider(LocalAppSemanticColors provides semanticColors) {
+    CompositionLocalProvider(
+        LocalAppSemanticColors provides semanticColors,
+        LocalLayoutDirection provides AppLocale.current.layoutDirection,
+    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
