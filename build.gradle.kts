@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,5 +35,22 @@ subprojects {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
+    }
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions {
+            freeCompilerArgs.add("-Xexpect-actual-classes")
+        }
+    }
+}
+
+// iOS targets are gated via buildSrc (zabanbazIosTargets). Disable commonizer as a safeguard.
+val enableNativeCommonizer: Boolean =
+    providers.gradleProperty("zabanbaz.enableNativeCommonizer")
+        .map { it.equals("true", ignoreCase = true) }
+        .getOrElse(false)
+
+tasks.configureEach {
+    if (name == "commonizeNativeDistribution") {
+        enabled = enableNativeCommonizer
     }
 }

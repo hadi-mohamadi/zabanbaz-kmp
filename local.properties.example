@@ -1,3 +1,6 @@
 ## Copy to local.properties (Android Studio creates this automatically).
 ## sdk.dir must point to your Android SDK installation.
 sdk.dir=/path/to/Android/Sdk
+
+## Set to true only on macOS when building the iOS target (downloads Kotlin Native ~300MB).
+# zabanbaz.enableNativeCommonizer=true

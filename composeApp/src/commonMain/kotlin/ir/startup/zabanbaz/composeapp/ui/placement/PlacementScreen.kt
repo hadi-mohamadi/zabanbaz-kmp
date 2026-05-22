@@ -136,7 +136,7 @@ fun PlacementScreen(
                     modifier = Modifier.padding(top = 8.dp, bottom = 16.dp),
                 )
                 LinearProgressIndicator(
-                    progress = progress,
+                    progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                 )
 

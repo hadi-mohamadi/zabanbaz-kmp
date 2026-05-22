@@ -5,9 +5,11 @@ plugins {
 
 kotlin {
     androidTarget()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    if (enableIosTargets()) {
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -27,7 +29,6 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
-            implementation(libs.androidx.lifecycle.viewmodel)
         }
     }
 }

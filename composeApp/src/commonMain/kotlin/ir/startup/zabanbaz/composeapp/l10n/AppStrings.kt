@@ -1,11 +1,17 @@
 package ir.startup.zabanbaz.composeapp.l10n
 
 object AppStrings {
+    const val appName = "Zabanbaz"
+    const val splashTagline = "Learn languages with confidence"
     const val noInternetTitle = "No internet connection"
     const val noInternetMessage = "Check your connection and try again."
     const val retry = "Retry"
     const val splashLoading = "Loading…"
     const val loginTitle = "Sign in"
+    const val loginSubtitle = "Enter your mobile number to get started"
+    const val loginCodeSubtitle = "Enter the verification code we sent you"
+    const val loginStepPhone = "Phone"
+    const val loginStepCode = "Code"
     const val loginMobileHint = "Mobile (09xxxxxxxxx)"
     const val loginCodeHint = "Verification code"
     const val loginRequestCode = "Send code"

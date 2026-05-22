@@ -5,15 +5,17 @@ plugins {
 
 kotlin {
     androidTarget()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    if (enableIosTargets()) {
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
+    }
 
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:errors"))
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.jetbrains.lifecycle.viewmodel)
+            api(libs.jetbrains.lifecycle.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

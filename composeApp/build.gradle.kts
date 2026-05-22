@@ -18,14 +18,16 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { target ->
-        target.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
+    if (enableIosTargets()) {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64(),
+        ).forEach { target ->
+            target.binaries.framework {
+                baseName = "ComposeApp"
+                isStatic = true
+            }
         }
     }
 

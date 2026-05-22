@@ -1,6 +1,6 @@
 package ir.startup.zabanbaz.composeapp
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ir.startup.zabanbaz.composeapp.navigation.AppRoutes
+import ir.startup.zabanbaz.composeapp.navigation.AppScreenPadding
 import ir.startup.zabanbaz.composeapp.ui.auth.LoginScreen
 import ir.startup.zabanbaz.composeapp.ui.home.HomeScreen
 import ir.startup.zabanbaz.composeapp.ui.onboarding.OnboardingScreen
@@ -29,7 +30,7 @@ fun ZabanbazApp() {
         NavHost(
             navController = navController,
             startDestination = AppRoutes.Splash,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.fillMaxSize(),
         ) {
             composable(AppRoutes.Splash) {
                 SplashScreen(
@@ -57,56 +58,66 @@ fun ZabanbazApp() {
                 )
             }
             composable(AppRoutes.Login) {
-                LoginScreen(
-                    onAuthenticated = {
-                        navController.navigate(AppRoutes.Splash) {
-                            popUpTo(AppRoutes.Login) { inclusive = true }
-                        }
-                    },
-                    snackbarHostState = snackbarHostState,
-                )
+                AppScreenPadding(padding) {
+                    LoginScreen(
+                        onAuthenticated = {
+                            navController.navigate(AppRoutes.Splash) {
+                                popUpTo(AppRoutes.Login) { inclusive = true }
+                            }
+                        },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
             }
             composable(AppRoutes.Onboarding) {
-                OnboardingScreen(
-                    onNavigateToPlacement = {
-                        navController.navigate(AppRoutes.Placement) {
-                            popUpTo(AppRoutes.Onboarding) { inclusive = true }
-                        }
-                    },
-                    onNavigateToHome = {
-                        navController.navigate(AppRoutes.Home) {
-                            popUpTo(AppRoutes.Onboarding) { inclusive = true }
-                        }
-                    },
-                    snackbarHostState = snackbarHostState,
-                )
+                AppScreenPadding(padding) {
+                    OnboardingScreen(
+                        onNavigateToPlacement = {
+                            navController.navigate(AppRoutes.Placement) {
+                                popUpTo(AppRoutes.Onboarding) { inclusive = true }
+                            }
+                        },
+                        onNavigateToHome = {
+                            navController.navigate(AppRoutes.Home) {
+                                popUpTo(AppRoutes.Onboarding) { inclusive = true }
+                            }
+                        },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
             }
             composable(AppRoutes.Placement) {
-                PlacementScreen(
-                    onComplete = {
-                        navController.navigate(AppRoutes.Home) {
-                            popUpTo(AppRoutes.Placement) { inclusive = true }
-                        }
-                    },
-                    snackbarHostState = snackbarHostState,
-                )
+                AppScreenPadding(padding) {
+                    PlacementScreen(
+                        onComplete = {
+                            navController.navigate(AppRoutes.Home) {
+                                popUpTo(AppRoutes.Placement) { inclusive = true }
+                            }
+                        },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
             }
             composable(AppRoutes.Home) {
-                HomeScreen(
-                    onNavigateToProfile = { navController.navigate(AppRoutes.Profile) },
-                    onLoggedOut = {
-                        navController.navigate(AppRoutes.Login) {
-                            popUpTo(AppRoutes.Home) { inclusive = true }
-                        }
-                    },
-                    snackbarHostState = snackbarHostState,
-                )
+                AppScreenPadding(padding) {
+                    HomeScreen(
+                        onNavigateToProfile = { navController.navigate(AppRoutes.Profile) },
+                        onLoggedOut = {
+                            navController.navigate(AppRoutes.Login) {
+                                popUpTo(AppRoutes.Home) { inclusive = true }
+                            }
+                        },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
             }
             composable(AppRoutes.Profile) {
-                ProfileScreen(
-                    onBack = { navController.popBackStack() },
-                    snackbarHostState = snackbarHostState,
-                )
+                AppScreenPadding(padding) {
+                    ProfileScreen(
+                        onBack = { navController.popBackStack() },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
             }
         }
     }

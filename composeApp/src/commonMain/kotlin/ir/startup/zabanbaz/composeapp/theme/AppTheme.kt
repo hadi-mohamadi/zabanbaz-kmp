@@ -1,55 +1,124 @@
 package ir.startup.zabanbaz.composeapp.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
+private val LightColorScheme = lightColorScheme(
+    primary = AppSchemeColors.LightPrimary,
+    onPrimary = AppColors.Neutral0,
+    primaryContainer = AppSchemeColors.LightPrimaryContainer,
+    onPrimaryContainer = AppSchemeColors.LightOnPrimaryContainer,
+    secondary = AppSchemeColors.LightSecondary,
+    onSecondary = AppColors.Neutral0,
+    secondaryContainer = AppSchemeColors.LightSecondaryContainer,
+    onSecondaryContainer = AppSchemeColors.LightOnSecondaryContainer,
+    tertiary = AppSchemeColors.LightTertiary,
+    onTertiary = AppColors.Neutral0,
+    tertiaryContainer = AppSchemeColors.LightTertiaryContainer,
+    onTertiaryContainer = AppSchemeColors.LightOnTertiaryContainer,
+    error = AppSchemeColors.LightError,
+    onError = AppColors.Neutral0,
+    errorContainer = AppSchemeColors.LightErrorContainer,
+    onErrorContainer = AppSchemeColors.LightOnErrorContainer,
+    background = AppColors.Neutral10,
+    onBackground = AppSchemeColors.LightOnSurface,
+    surface = AppColors.Neutral10,
+    onSurface = AppSchemeColors.LightOnSurface,
+    surfaceDim = AppSchemeColors.LightSurfaceDim,
+    surfaceBright = AppColors.Neutral0,
+    surfaceContainerLowest = AppColors.Neutral0,
+    surfaceContainerLow = AppSchemeColors.LightSurfaceContainerLow,
+    surfaceContainer = AppSchemeColors.LightSurfaceContainer,
+    surfaceContainerHigh = AppSchemeColors.LightSurfaceContainerHigh,
+    surfaceContainerHighest = AppSchemeColors.LightSurfaceContainerHighest,
+    onSurfaceVariant = AppSchemeColors.LightOnSurfaceVariant,
+    outline = AppSchemeColors.LightOutline,
+    outlineVariant = AppSchemeColors.LightOutlineVariant,
+    inverseSurface = AppSchemeColors.LightInverseSurface,
+    inverseOnSurface = AppSchemeColors.LightOnInverseSurface,
+    inversePrimary = AppSchemeColors.LightInversePrimary,
+    surfaceTint = AppSchemeColors.LightSurfaceTint,
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = AppSchemeColors.DarkPrimary,
+    onPrimary = AppSchemeColors.DarkOnPrimary,
+    primaryContainer = AppSchemeColors.DarkPrimaryContainer,
+    onPrimaryContainer = AppSchemeColors.DarkOnPrimaryContainer,
+    secondary = AppSchemeColors.DarkSecondary,
+    onSecondary = AppSchemeColors.DarkOnSecondary,
+    secondaryContainer = AppSchemeColors.DarkSecondaryContainer,
+    onSecondaryContainer = AppSchemeColors.DarkOnSecondaryContainer,
+    tertiary = AppSchemeColors.DarkTertiary,
+    onTertiary = AppSchemeColors.DarkOnTertiary,
+    tertiaryContainer = AppSchemeColors.DarkTertiaryContainer,
+    onTertiaryContainer = AppSchemeColors.DarkOnTertiaryContainer,
+    error = AppSchemeColors.DarkError,
+    onError = AppSchemeColors.DarkOnError,
+    errorContainer = AppSchemeColors.DarkErrorContainer,
+    onErrorContainer = AppSchemeColors.DarkOnErrorContainer,
+    background = AppColors.AppDarkBackground,
+    onBackground = AppSchemeColors.DarkOnSurface,
+    surface = AppColors.AppDarkBackground,
+    onSurface = AppSchemeColors.DarkOnSurface,
+    surfaceDim = AppColors.AppDarkBackground,
+    surfaceBright = AppSchemeColors.DarkSurfaceBright,
+    surfaceContainerLowest = AppSchemeColors.DarkSurfaceContainerLowest,
+    surfaceContainerLow = AppSchemeColors.DarkSurfaceContainerLow,
+    surfaceContainer = AppSchemeColors.DarkSurfaceContainer,
+    surfaceContainerHigh = AppSchemeColors.DarkSurfaceContainerHigh,
+    surfaceContainerHighest = AppSchemeColors.DarkSurfaceContainerHighest,
+    onSurfaceVariant = AppSchemeColors.DarkOnSurfaceVariant,
+    outline = AppSchemeColors.DarkOutline,
+    outlineVariant = AppSchemeColors.DarkOutlineVariant,
+    inverseSurface = AppSchemeColors.DarkInverseSurface,
+    inverseOnSurface = AppSchemeColors.DarkOnInverseSurface,
+    inversePrimary = AppSchemeColors.DarkInversePrimary,
+    surfaceTint = AppSchemeColors.DarkSurfaceTint,
+)
 
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colors = if (darkTheme) {
-        darkColorScheme(
-            primary = Color(0xFFBB86FC),
-            secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3),
-        )
-    } else {
-        lightColorScheme(
-            primary = Color(0xFF6200EE),
-            secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3),
-        )
-    }
-    val typography = Typography(
-        bodyMedium = TextStyle(
-            fontFamily = FontFamily.Default,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-        ),
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp),
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val semanticColors = AppSemanticColors(
+        success = AppColors.Success,
+        warning = AppColors.Warning,
+        info = AppColors.Info,
     )
 
-    MaterialTheme(
-        colorScheme = colors,
-        typography = typography,
-        shapes = shapes,
-        content = content,
+    CompositionLocalProvider(LocalAppSemanticColors provides semanticColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            shapes = AppShapes,
+            content = content,
+        )
+    }
+}
+
+/** Splash / marketing gradients derived from brand tokens. */
+object AppGradients {
+    val splashLight = listOf(
+        Color(0xFFE8EFFF),
+        AppColors.Neutral10,
+        Color(0xFFF3EEFF),
+    )
+    val splashDark = listOf(
+        AppColors.Neutral1000,
+        AppColors.AppDarkBackground,
+        Color(0xFF0F1729),
+    )
+    val logoMark = listOf(
+        AppSchemeColors.LightPrimary,
+        AppColors.BrandSecondary,
+        AppColors.BrandTertiary,
     )
 }

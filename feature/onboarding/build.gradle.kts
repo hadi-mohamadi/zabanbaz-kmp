@@ -5,9 +5,11 @@ plugins {
 
 kotlin {
     androidTarget()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    if (enableIosTargets()) {
+        iosX64()
+        iosArm64()
+        iosSimulatorArm64()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -16,9 +18,6 @@ kotlin {
             implementation(project(":common:profile"))
             implementation(project(":common:languages"))
             implementation(libs.kotlinx.coroutines.core)
-        }
-        androidMain.dependencies {
-            implementation(libs.koin.android)
         }
     }
 }

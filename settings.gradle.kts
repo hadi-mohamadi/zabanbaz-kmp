@@ -1,32 +1,21 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
-        maven {
-            url = uri("https://maven.aliyun.com/repository/google")
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
         google()
-        gradlePluginPortal()
+        maven { url = uri("https://cache-redirector.jetbrains.com/maven-central") }
+        maven { url = uri("https://maven.aliyun.com/repository/central") }
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        gradlePluginPortal()
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        maven {
-            url = uri("https://maven.aliyun.com/repository/google")
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
         google()
+        maven { url = uri("https://cache-redirector.jetbrains.com/maven-central") }
+        maven { url = uri("https://maven.aliyun.com/repository/central") }
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
@@ -35,7 +24,6 @@ dependencyResolutionManagement {
 rootProject.name = "zabanbaz"
 include(":androidApp")
 include(":composeApp")
-include(":shared")
 include(":core:errors")
 include(":core:presentation")
 include(":core:storage")
