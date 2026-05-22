@@ -3,10 +3,11 @@ package ir.startup.zabanbaz.common.profile.domain
 interface ProfileRepository {
     suspend fun getUserProfile(): UserProfile
 
-    suspend fun updateCoreProfile(
-        sex: String,
-        learningLanguageId: Int,
-        username: String,
+    /** Partial update — only non-null fields are sent to PATCH /profile/core/ */
+    suspend fun patchCoreProfile(
+        sex: String? = null,
+        learningLanguageId: Int? = null,
+        username: String? = null,
     ): UserProfile
 
     suspend fun updateProfileDetails(

@@ -9,11 +9,11 @@ class ProfileRepositoryImpl(
 ) : ProfileRepository {
     override suspend fun getUserProfile(): UserProfile = remoteDataSource.getProfile()
 
-    override suspend fun updateCoreProfile(
-        sex: String,
-        learningLanguageId: Int,
-        username: String,
-    ): UserProfile = remoteDataSource.updateCoreProfile(
+    override suspend fun patchCoreProfile(
+        sex: String?,
+        learningLanguageId: Int?,
+        username: String?,
+    ): UserProfile = remoteDataSource.patchCoreProfile(
         sex = sex,
         learningLanguageId = learningLanguageId,
         username = username,

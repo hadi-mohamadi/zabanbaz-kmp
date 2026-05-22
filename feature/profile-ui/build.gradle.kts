@@ -13,6 +13,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project(":core:errors"))
             implementation(project(":core:presentation"))
             implementation(project(":common:profile"))
             implementation(libs.kotlinx.coroutines.core)

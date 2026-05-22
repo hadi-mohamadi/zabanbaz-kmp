@@ -121,9 +121,6 @@ fun ProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             InfoRow(label = AppStrings.homeLabelPhone, value = profile.phone)
-                            profile.username?.let {
-                                InfoRow(label = AppStrings.homeLabelUsername, value = "@$it")
-                            }
                             profile.learningLanguageName?.let {
                                 InfoRow(label = AppStrings.homeLabelLanguage, value = it)
                             }
@@ -151,6 +148,13 @@ fun ProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             AppTextField(
+                                value = state.username,
+                                onValueChange = viewModel::onUsernameChanged,
+                                label = AppStrings.onboardingUsernameHint,
+                                enabled = !state.isSaving,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            AppTextField(
                                 value = state.firstName,
                                 onValueChange = viewModel::onFirstNameChanged,
                                 label = AppStrings.profileFirstName,
@@ -177,6 +181,14 @@ fun ProfileScreen(
                                 onClick = viewModel::onSave,
                                 isLoading = state.isSaving,
                             )
+                            state.fieldError?.let { error ->
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = error,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
                         }
 
                         if (profile.canRetakeEnglishPlacement) {

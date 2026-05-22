@@ -17,5 +17,5 @@ fun presentationModule(): Module = module {
     viewModel { OnboardingViewModel(get(), get(), get()) }
     viewModel { PlacementViewModel(get(), get()) }
     viewModel { HomeViewModel(get(), get()) }
-    viewModel { ProfileViewModel(get(), get()) }
+    viewModel { ProfileViewModel(get(), get(), get()) }
 }

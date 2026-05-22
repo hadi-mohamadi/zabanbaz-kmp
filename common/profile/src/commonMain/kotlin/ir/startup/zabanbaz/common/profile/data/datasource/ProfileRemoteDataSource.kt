@@ -1,9 +1,7 @@
 package ir.startup.zabanbaz.common.profile.data.datasource
 
 import ir.startup.zabanbaz.common.profile.data.dto.ProfileDto
-import ir.startup.zabanbaz.common.profile.data.dto.UpdateCoreProfileRequestDto
 import ir.startup.zabanbaz.common.profile.data.dto.UpdateProfileDetailsRequestDto
-import ir.startup.zabanbaz.common.profile.data.dto.UpdateProfileDetailsResponseDto
 import ir.startup.zabanbaz.common.profile.domain.UserProfile
 import ir.startup.zabanbaz.core.networking.ApiService
 import ir.startup.zabanbaz.core.networking.HttpClientFactory
@@ -20,30 +18,24 @@ class ProfileRemoteDataSource(
                 .toDomain()
         }
 
-    suspend fun updateCoreProfile(
-        sex: String?,
-        learningLanguageId: Int?,
-        username: String?,
+    suspend fun patchCoreProfile(
+        sex: String? = null,
+        learningLanguageId: Int? = null,
+        username: String? = null,
     ): UserProfile {
-        val dto = UpdateCoreProfileRequestDto(
-            sex = sex,
-            learningLanguageId = learningLanguageId,
-            username = username,
-        )
-        return apiService.patch(
-            endpoint = "/profile/core/",
-            body = dto,
-        ) { body: JsonObject ->
-            val partial = HttpClientFactory.defaultJson
-                .decodeFromJsonElement(ProfileDto.serializer(), body)
-            getProfile().copy(
-                sex = partial.sex?.takeIf { it.isNotBlank() } ?: sex,
-                learningLanguageId = partial.learningLanguageId ?: learningLanguageId,
-                learningLanguageCode = partial.learningLanguageCode,
-                learningLanguageName = partial.learningLanguageName,
-                username = partial.username?.takeIf { it.isNotBlank() } ?: username,
-            )
+        val body = buildMap<String, Any> {
+            sex?.let { put("sex", it) }
+            learningLanguageId?.let { put("learning_language_id", it) }
+            username?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }?.let { put("username", it) }
         }
+        require(body.isNotEmpty()) { "At least one core profile field is required" }
+
+        apiService.patch(
+            endpoint = "/profile/core/",
+            body = body,
+        ) { _: JsonObject -> }
+
+        return getProfile()
     }
 
     suspend fun updateProfileDetails(
@@ -56,17 +48,11 @@ class ProfileRemoteDataSource(
             lastName = lastName,
             age = age,
         )
-        return apiService.patch(
+        apiService.patch(
             endpoint = "/profile/details/",
             body = dto,
-        ) { body: JsonObject ->
-            val partial = HttpClientFactory.defaultJson
-                .decodeFromJsonElement(UpdateProfileDetailsResponseDto.serializer(), body)
-            getProfile().copy(
-                firstName = partial.firstName?.takeIf { it.isNotBlank() } ?: firstName,
-                lastName = partial.lastName?.takeIf { it.isNotBlank() } ?: lastName,
-                age = partial.age ?: age,
-            )
-        }
+        ) { _: JsonObject -> }
+
+        return getProfile()
     }
 }
