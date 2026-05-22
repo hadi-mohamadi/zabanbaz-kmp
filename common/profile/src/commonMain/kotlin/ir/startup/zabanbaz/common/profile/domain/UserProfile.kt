@@ -17,10 +17,14 @@ data class UserProfile(
             learningLanguageId != null &&
             !username.isNullOrBlank()
 
-    /** English learners must complete the CEFR placement test once. */
+    /** First-time routing: English learners without a CEFR level must take placement. */
     val needsEnglishPlacement: Boolean
         get() = learningLanguageCode.equals("en", ignoreCase = true) &&
             englishCefrLevel.isNullOrBlank()
+
+    /** English learners can retake placement from home to update their level. */
+    val canRetakeEnglishPlacement: Boolean
+        get() = learningLanguageCode.equals("en", ignoreCase = true)
 
     val fullName: String?
         get() = listOfNotNull(firstName?.trim(), lastName?.trim())

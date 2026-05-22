@@ -5,7 +5,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,6 +26,7 @@ import ir.startup.zabanbaz.composeapp.ui.splash.SplashScreen
 fun ZabanbazApp() {
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+    var homeRefreshNonce by remember { mutableIntStateOf(0) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -90,8 +94,13 @@ fun ZabanbazApp() {
                 AppScreenPadding(padding) {
                     PlacementScreen(
                         onComplete = {
-                            navController.navigate(AppRoutes.Home) {
-                                popUpTo(AppRoutes.Placement) { inclusive = true }
+                            if (navController.previousBackStackEntry?.destination?.route == AppRoutes.Home) {
+                                homeRefreshNonce++
+                                navController.popBackStack()
+                            } else {
+                                navController.navigate(AppRoutes.Home) {
+                                    popUpTo(AppRoutes.Placement) { inclusive = true }
+                                }
                             }
                         },
                         snackbarHostState = snackbarHostState,
@@ -99,17 +108,18 @@ fun ZabanbazApp() {
                 }
             }
             composable(AppRoutes.Home) {
-                AppScreenPadding(padding) {
-                    HomeScreen(
-                        onNavigateToProfile = { navController.navigate(AppRoutes.Profile) },
-                        onLoggedOut = {
-                            navController.navigate(AppRoutes.Login) {
-                                popUpTo(AppRoutes.Home) { inclusive = true }
-                            }
-                        },
-                        snackbarHostState = snackbarHostState,
-                    )
-                }
+                HomeScreen(
+                    onRetakePlacement = {
+                        navController.navigate(AppRoutes.Placement)
+                    },
+                    onLoggedOut = {
+                        navController.navigate(AppRoutes.Login) {
+                            popUpTo(AppRoutes.Home) { inclusive = true }
+                        }
+                    },
+                    snackbarHostState = snackbarHostState,
+                    refreshNonce = homeRefreshNonce,
+                )
             }
             composable(AppRoutes.Profile) {
                 AppScreenPadding(padding) {

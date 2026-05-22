@@ -8,6 +8,12 @@ import ir.startup.zabanbaz.core.presentation.OperationErrorState
 data class HomeUiState(
     val profile: UserProfile? = null,
     val isLoading: Boolean = true,
+    val isEditing: Boolean = false,
+    val firstName: String = "",
+    val lastName: String = "",
+    val ageText: String = "",
+    val isSaving: Boolean = false,
+    val saveSucceeded: Boolean = false,
     override val operationError: AppOperationError = AppOperationError.None,
 ) : BaseUiState(operationError), OperationErrorState {
     override fun copyWithOperationError(operationError: AppOperationError): BaseUiState =
