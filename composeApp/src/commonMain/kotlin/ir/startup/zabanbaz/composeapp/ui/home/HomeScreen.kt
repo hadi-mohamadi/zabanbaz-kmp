@@ -131,7 +131,7 @@ fun HomeScreen(
                         profile.username?.let { username ->
                             HomeStatCard(
                                 label = AppStrings.homeLabelUsername,
-                                value = "@$username",
+                                value = username,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                         }
