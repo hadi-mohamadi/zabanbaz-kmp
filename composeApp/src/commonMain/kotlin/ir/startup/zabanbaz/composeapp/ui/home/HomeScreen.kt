@@ -4,20 +4,24 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -164,6 +168,14 @@ private fun HomeProfileMenu(
     modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    val displayName = profile.fullName
+        ?: profile.username
+        ?: profile.phone
+    val subtitle = when {
+        profile.fullName != null && profile.username != null -> profile.username
+        profile.fullName != null -> profile.phone
+        else -> null
+    }
 
     Box(modifier = modifier) {
         ProfileAvatar(
@@ -174,21 +186,90 @@ private fun HomeProfileMenu(
         DropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false },
+            modifier = Modifier.widthIn(min = 272.dp, max = 320.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            containerColor = MaterialTheme.colorScheme.surface,
+            shadowElevation = 12.dp,
+            tonalElevation = 4.dp,
         ) {
-            DropdownMenuItem(
-                text = { Text(AppStrings.homeMenuProfile) },
-                onClick = {
-                    menuExpanded = false
-                    onNavigateToProfile()
-                },
-            )
-            DropdownMenuItem(
-                text = { Text(AppStrings.homeLogout) },
-                onClick = {
-                    menuExpanded = false
-                    onLogout()
-                },
-            )
+            Column(
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    ProfileAvatar(profile = profile, size = 44.dp)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = displayName,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                        )
+                        subtitle?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                modifier = Modifier.padding(top = 2.dp),
+                            )
+                        }
+                    }
+                }
+
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                HomeProfileMenuAction(
+                    label = AppStrings.homeMenuProfile,
+                    onClick = {
+                        menuExpanded = false
+                        onNavigateToProfile()
+                    },
+                )
+                HomeProfileMenuAction(
+                    label = AppStrings.homeLogout,
+                    onClick = {
+                        menuExpanded = false
+                        onLogout()
+                    },
+                    destructive = true,
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun HomeProfileMenuAction(
+    label: String,
+    onClick: () -> Unit,
+    destructive: Boolean = false,
+) {
+    val containerColor = if (destructive) {
+        MaterialTheme.colorScheme.errorContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceContainer
+    }
+    val labelColor = if (destructive) {
+        MaterialTheme.colorScheme.onErrorContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    Surface(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        color = containerColor,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = labelColor,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+        )
     }
 }
