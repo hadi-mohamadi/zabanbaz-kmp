@@ -14,12 +14,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ir.startup.zabanbaz.composeapp.navigation.AppRoutes
 import ir.startup.zabanbaz.composeapp.navigation.AppScreenPadding
 import ir.startup.zabanbaz.composeapp.ui.auth.LoginScreen
+import ir.startup.zabanbaz.composeapp.ui.discussion.DiscussionCallScreen
 import ir.startup.zabanbaz.composeapp.ui.discussion.DiscussionQueueScreen
 import ir.startup.zabanbaz.composeapp.ui.home.HomeScreen
 import ir.startup.zabanbaz.composeapp.ui.onboarding.OnboardingScreen
@@ -137,6 +140,26 @@ fun ZabanbazApp() {
             composable(AppRoutes.DiscussionQueue) {
                 DiscussionQueueScreen(
                     onBack = { navController.popBackStack() },
+                    onNavigateToCall = { sessionId ->
+                        navController.navigate(AppRoutes.discussionCallRoute(sessionId)) {
+                            popUpTo(AppRoutes.DiscussionQueue) { inclusive = true }
+                        }
+                    },
+                    snackbarHostState = snackbarHostState,
+                )
+            }
+            composable(
+                route = AppRoutes.DiscussionCall,
+                arguments = listOf(
+                    navArgument("sessionId") { type = NavType.IntType },
+                ),
+            ) { backStackEntry ->
+                val sessionId = backStackEntry.arguments?.getInt("sessionId") ?: return@composable
+                DiscussionCallScreen(
+                    sessionId = sessionId,
+                    onFinished = {
+                        navController.popBackStack(AppRoutes.Home, false)
+                    },
                     snackbarHostState = snackbarHostState,
                 )
             }

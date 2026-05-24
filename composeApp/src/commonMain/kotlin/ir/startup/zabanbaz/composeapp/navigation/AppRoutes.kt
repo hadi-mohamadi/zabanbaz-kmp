@@ -9,5 +9,8 @@ object AppRoutes {
     const val Placement = "placement"
     const val Home = "home"
     const val DiscussionQueue = "discussion_queue"
+    const val DiscussionCall = "discussion_call/{sessionId}"
+
+    fun discussionCallRoute(sessionId: Int): String = "discussion_call/$sessionId"
     const val Profile = ProfileRoutes.Profile
 }

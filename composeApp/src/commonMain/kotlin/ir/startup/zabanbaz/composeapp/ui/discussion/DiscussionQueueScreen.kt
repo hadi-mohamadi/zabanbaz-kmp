@@ -18,6 +18,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ir.startup.zabanbaz.common.discussion.domain.DiscussionMatchStatus
+import ir.startup.zabanbaz.composeapp.components.AppPrimaryButton
 import ir.startup.zabanbaz.composeapp.components.AppSecondaryButton
 import ir.startup.zabanbaz.composeapp.components.InfoRow
 import ir.startup.zabanbaz.composeapp.components.SplashBackground
@@ -36,10 +38,18 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DiscussionQueueScreen(
     onBack: () -> Unit,
+    onNavigateToCall: (Int) -> Unit,
     snackbarHostState: SnackbarHostState,
     viewModel: DiscussionQueueViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.matchStatus, state.sessionId) {
+        val sessionId = state.sessionId
+        if (state.matchStatus == DiscussionMatchStatus.Matched && sessionId != null) {
+            onNavigateToCall(sessionId)
+        }
+    }
 
     OperationErrorEffects(
         state = state,
@@ -77,10 +87,7 @@ fun DiscussionQueueScreen(
                     state.matchStatus == DiscussionMatchStatus.Matched -> {
                         DiscussionMatchedContent(
                             partnerName = state.partnerDisplayName.orEmpty(),
-                            languageName = state.learningLanguageName.orEmpty(),
-                            cefrLevel = state.englishCefrLevel.orEmpty(),
-                            onLeave = { viewModel.onLeave(onFinished = onBack) },
-                            isLeaving = state.isLeaving,
+                            onStartCall = { state.sessionId?.let(onNavigateToCall) },
                         )
                     }
 
@@ -166,10 +173,7 @@ private fun DiscussionSearchingContent(
 @Composable
 private fun DiscussionMatchedContent(
     partnerName: String,
-    languageName: String,
-    cefrLevel: String,
-    onLeave: () -> Unit,
-    isLeaving: Boolean,
+    onStartCall: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,31 +185,15 @@ private fun DiscussionMatchedContent(
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large,
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 2.dp,
-            shadowElevation = 4.dp,
-        ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                InfoRow(label = AppStrings.discussionPartnerLabel, value = partnerName)
-                DiscussionCriteriaCard(languageName = languageName, cefrLevel = cefrLevel)
-            }
-        }
         Text(
-            text = AppStrings.discussionVideoComingSoon,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = AppStrings.discussionCallWith(partnerName),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
         )
-        AppSecondaryButton(
-            text = AppStrings.discussionLeave,
-            onClick = onLeave,
-            enabled = !isLeaving,
+        AppPrimaryButton(
+            text = AppStrings.discussionStartCall,
+            onClick = onStartCall,
         )
     }
 }

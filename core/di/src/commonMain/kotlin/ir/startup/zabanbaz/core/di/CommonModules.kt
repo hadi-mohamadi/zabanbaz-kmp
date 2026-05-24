@@ -4,9 +4,13 @@ import ir.startup.zabanbaz.common.discussion.data.datasource.DiscussionRemoteDat
 import ir.startup.zabanbaz.common.discussion.data.repository.DiscussionRepositoryImpl
 import ir.startup.zabanbaz.common.discussion.domain.DiscussionRepository
 import ir.startup.zabanbaz.common.discussion.domain.EndDiscussionSessionUseCase
+import ir.startup.zabanbaz.common.discussion.domain.GetDiscussionConfigUseCase
 import ir.startup.zabanbaz.common.discussion.domain.GetDiscussionMatchStatusUseCase
+import ir.startup.zabanbaz.common.discussion.domain.GetDiscussionSessionUseCase
+import ir.startup.zabanbaz.common.discussion.domain.GetDiscussionSignalingEventsUseCase
 import ir.startup.zabanbaz.common.discussion.domain.JoinDiscussionMatchUseCase
 import ir.startup.zabanbaz.common.discussion.domain.LeaveDiscussionMatchUseCase
+import ir.startup.zabanbaz.common.discussion.domain.PostDiscussionSignalingEventUseCase
 import ir.startup.zabanbaz.common.placement.data.datasource.PlacementRemoteDataSource
 import ir.startup.zabanbaz.common.placement.data.repository.PlacementRepositoryImpl
 import ir.startup.zabanbaz.common.placement.domain.PlacementRepository
@@ -50,6 +54,10 @@ fun commonModule(): Module = module {
     factory { LeaveDiscussionMatchUseCase(get()) }
     factory { GetDiscussionMatchStatusUseCase(get()) }
     factory { EndDiscussionSessionUseCase(get()) }
+    factory { GetDiscussionSessionUseCase(get()) }
+    factory { GetDiscussionConfigUseCase(get()) }
+    factory { PostDiscussionSignalingEventUseCase(get()) }
+    factory { GetDiscussionSignalingEventsUseCase(get()) }
 
     factory { LogoutUseCase(get()) }
 }

@@ -44,6 +44,8 @@ object AppStrings {
     const val discussionVideoComingSoon = "Video call will be available in the next update."
     const val discussionCancel = "Cancel"
     const val discussionLeave = "Leave"
+    const val discussionCallTitle = "Free discussion"
+    const val discussionStartCall = "Start call"
     const val profileTitle = "Profile"
     const val profileSubtitle = "Update your personal details"
     const val profileBack = "Back"
@@ -73,6 +75,7 @@ object AppStrings {
 
     fun homeWelcome(name: String) = "Welcome back, $name"
     fun homeCefrBadge(level: String) = "CEFR $level"
+    fun discussionCallWith(name: String) = "Discussion with $name"
     fun profileUsername(username: String) = "Username: $username"
     fun profilePhone(phone: String) = "Phone: $phone"
     fun profileLanguage(language: String) = "Language: $language"
