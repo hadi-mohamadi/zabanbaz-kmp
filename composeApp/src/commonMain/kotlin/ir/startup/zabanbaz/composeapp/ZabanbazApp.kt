@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import ir.startup.zabanbaz.composeapp.navigation.AppRoutes
 import ir.startup.zabanbaz.composeapp.navigation.AppScreenPadding
 import ir.startup.zabanbaz.composeapp.ui.auth.LoginScreen
+import ir.startup.zabanbaz.composeapp.ui.discussion.DiscussionQueueScreen
 import ir.startup.zabanbaz.composeapp.ui.home.HomeScreen
 import ir.startup.zabanbaz.composeapp.ui.onboarding.OnboardingScreen
 import ir.startup.zabanbaz.composeapp.ui.placement.PlacementScreen
@@ -120,6 +121,9 @@ fun ZabanbazApp() {
             composable(AppRoutes.Home) {
                 HomeScreen(
                     onNavigateToProfile = { navController.navigate(AppRoutes.Profile) },
+                    onRequestFreeDiscussion = {
+                        navController.navigate(AppRoutes.DiscussionQueue)
+                    },
                     onRetakePlacement = { navController.navigate(AppRoutes.Placement) },
                     onLoggedOut = {
                         navController.navigate(AppRoutes.Login) {
@@ -128,6 +132,12 @@ fun ZabanbazApp() {
                     },
                     snackbarHostState = snackbarHostState,
                     refreshNonce = homeRefreshNonce,
+                )
+            }
+            composable(AppRoutes.DiscussionQueue) {
+                DiscussionQueueScreen(
+                    onBack = { navController.popBackStack() },
+                    snackbarHostState = snackbarHostState,
                 )
             }
             composable(AppRoutes.Profile) {

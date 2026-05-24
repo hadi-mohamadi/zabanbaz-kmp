@@ -21,6 +21,7 @@ kotlin {
             implementation(project(":common:profile"))
             implementation(project(":common:languages"))
             implementation(project(":common:placement"))
+            implementation(project(":common:discussion"))
             implementation(project(":feature:auth"))
             implementation(libs.koin.core)
             implementation(libs.multiplatform.settings)

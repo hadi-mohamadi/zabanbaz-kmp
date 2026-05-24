@@ -1,6 +1,7 @@
 package ir.startup.zabanbaz.common.profile.data.datasource
 
 import ir.startup.zabanbaz.common.profile.data.dto.ProfileDto
+import ir.startup.zabanbaz.common.profile.data.dto.UpdateCoreProfileRequestDto
 import ir.startup.zabanbaz.common.profile.data.dto.UpdateProfileDetailsRequestDto
 import ir.startup.zabanbaz.common.profile.domain.UserProfile
 import ir.startup.zabanbaz.core.networking.ApiService
@@ -23,16 +24,18 @@ class ProfileRemoteDataSource(
         learningLanguageId: Int? = null,
         username: String? = null,
     ): UserProfile {
-        val body = buildMap<String, Any> {
-            sex?.let { put("sex", it) }
-            learningLanguageId?.let { put("learning_language_id", it) }
-            username?.trim()?.takeIf { it.isNotEmpty() }?.let { put("username", it) }
-        }
-        require(body.isNotEmpty()) { "At least one core profile field is required" }
+        val dto = UpdateCoreProfileRequestDto(
+            sex = sex,
+            learningLanguageId = learningLanguageId,
+            username = username?.trim()?.takeIf { it.isNotEmpty() },
+        )
+        require(
+            dto.sex != null || dto.learningLanguageId != null || dto.username != null,
+        ) { "At least one core profile field is required" }
 
         apiService.patch(
             endpoint = "/profile/core/",
-            body = body,
+            body = dto,
         ) { _: JsonObject -> }
 
         return getProfile()

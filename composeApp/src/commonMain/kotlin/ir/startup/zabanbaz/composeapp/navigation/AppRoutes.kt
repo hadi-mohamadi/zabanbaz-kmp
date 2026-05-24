@@ -8,5 +8,6 @@ object AppRoutes {
     const val Onboarding = "onboarding"
     const val Placement = "placement"
     const val Home = "home"
+    const val DiscussionQueue = "discussion_queue"
     const val Profile = ProfileRoutes.Profile
 }

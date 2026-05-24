@@ -1,5 +1,12 @@
 package ir.startup.zabanbaz.core.di
 
+import ir.startup.zabanbaz.common.discussion.data.datasource.DiscussionRemoteDataSource
+import ir.startup.zabanbaz.common.discussion.data.repository.DiscussionRepositoryImpl
+import ir.startup.zabanbaz.common.discussion.domain.DiscussionRepository
+import ir.startup.zabanbaz.common.discussion.domain.EndDiscussionSessionUseCase
+import ir.startup.zabanbaz.common.discussion.domain.GetDiscussionMatchStatusUseCase
+import ir.startup.zabanbaz.common.discussion.domain.JoinDiscussionMatchUseCase
+import ir.startup.zabanbaz.common.discussion.domain.LeaveDiscussionMatchUseCase
 import ir.startup.zabanbaz.common.placement.data.datasource.PlacementRemoteDataSource
 import ir.startup.zabanbaz.common.placement.data.repository.PlacementRepositoryImpl
 import ir.startup.zabanbaz.common.placement.domain.PlacementRepository
@@ -36,6 +43,13 @@ fun commonModule(): Module = module {
     factory { StartPlacementTestUseCase(get()) }
     factory { SubmitPlacementTestUseCase(get()) }
     factory { GetPlacementTestResultUseCase(get()) }
+
+    single { DiscussionRemoteDataSource(get()) }
+    single<DiscussionRepository> { DiscussionRepositoryImpl(get()) }
+    factory { JoinDiscussionMatchUseCase(get()) }
+    factory { LeaveDiscussionMatchUseCase(get()) }
+    factory { GetDiscussionMatchStatusUseCase(get()) }
+    factory { EndDiscussionSessionUseCase(get()) }
 
     factory { LogoutUseCase(get()) }
 }

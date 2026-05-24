@@ -48,6 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(
     onNavigateToProfile: () -> Unit,
+    onRequestFreeDiscussion: () -> Unit,
     onRetakePlacement: () -> Unit,
     onLoggedOut: () -> Unit,
     snackbarHostState: SnackbarHostState,
@@ -130,7 +131,7 @@ fun HomeScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        HomeFreeDiscussionSection()
+                        HomeFreeDiscussionSection(onRequest = onRequestFreeDiscussion)
                     }
                 }
             }
@@ -139,7 +140,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeFreeDiscussionSection() {
+private fun HomeFreeDiscussionSection(onRequest: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
@@ -165,7 +166,7 @@ private fun HomeFreeDiscussionSection() {
             }
             AppPrimaryButton(
                 text = AppStrings.homeFreeDiscussionRequest,
-                onClick = {},
+                onClick = onRequest,
             )
         }
     }

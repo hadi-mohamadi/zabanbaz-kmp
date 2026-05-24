@@ -94,34 +94,39 @@ class OnboardingViewModel(
             }
         }
 
-        launchSafeCall(
-            action = {
-                updateState { copy(isSubmitting = true, fieldError = null) }
-                updateCoreProfileUseCase(
-                    sex = sex.apiValue,
-                    learningLanguageId = languageId,
-                    username = username,
-                )
-            },
-            onSuccess = {
-                updateState {
-                    copy(
-                        isSubmitting = false,
-                        isComplete = true,
-                        fieldError = null,
+        scope.launch {
+            updateState { copy(isSubmitting = true, fieldError = null) }
+            safeCall(
+                action = {
+                    updateCoreProfileUseCase(
+                        sex = sex.apiValue,
+                        learningLanguageId = languageId,
+                        username = username,
                     )
-                }
-            },
-            onError = { error ->
-                updateState {
-                    copy(
-                        isSubmitting = false,
-                        fieldError = clientMessage(error),
-                        operationError = AppOperationError.None,
-                    )
-                }
-            },
-        )
+                },
+                onSuccess = {
+                    updateState {
+                        copy(
+                            isSubmitting = false,
+                            isComplete = true,
+                            fieldError = null,
+                        )
+                    }
+                },
+                onError = { error ->
+                    updateState {
+                        copy(
+                            isSubmitting = false,
+                            fieldError = clientMessage(error),
+                            operationError = AppOperationError.None,
+                        )
+                    }
+                },
+            )
+            if (currentState.isSubmitting) {
+                updateState { copy(isSubmitting = false) }
+            }
+        }
     }
 
     private fun clientMessage(error: Throwable): String =
